@@ -40,3 +40,6 @@
   gripper_controller:
     ros__parameters:
       joint: rh_r1_joint
+      allow_stalling: true
+      stall_velocity_threshold: 0.001
+      stall_timeout: 1.0
