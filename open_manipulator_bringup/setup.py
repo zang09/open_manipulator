@@ -18,6 +18,8 @@ setup(
             glob('config/open_manipulator_x/*')),
         (os.path.join('share', package_name, 'config/omy_3m'), glob('config/omy_3m/*')),
         (os.path.join('share', package_name, 'config/omy_f3m'), glob('config/omy_f3m/*')),
+        (os.path.join('share', package_name, 'config/omy_f3m_d435'),
+            glob('config/omy_f3m_d435/*')),
         (os.path.join('share', package_name, 'config/omy_f3m_follower_ai'),
             glob('config/omy_f3m_follower_ai/*')),
         (os.path.join('share', package_name, 'config/omy_f3m_leader_ai'),
