@@ -534,3 +534,8 @@ doc/
 
 ## IDE: Cursor
 .cursor/
+
+##############################
+# URDF viewer only (not part of the package)
+##############################
+open_manipulator_description/thirdparty/
