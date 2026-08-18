@@ -52,6 +52,41 @@
     </visual>
   </link>
 
+  <!-- Mount box under the base. The robot stands on an empty 230 x 230 x 115 mm box,
+       centred on link0's axis; the box's top face IS link0's mounting plane, so it
+       fills z = -0.115 .. 0 in link0 and the surface it stands on is 115 mm below
+       link0. Mass is nominal: the link is fixed to the base and never enters arm
+       dynamics, the inertial is here only so the box is a body rather than a bare
+       frame (box inertia for 1 kg at 0.23 x 0.23 x 0.115). -->
+  <joint name="$(arg prefix)base_box_joint" type="fixed">
+    <parent link="$(arg prefix)link0"/>
+    <child link="$(arg prefix)base_box_link"/>
+    <origin xyz="0 0 -0.0575" rpy="0 0 0"/>
+  </joint>
+
+  <link name="$(arg prefix)base_box_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.23 0.23 0.115"/>
+      </geometry>
+      <material name="cardboard">
+        <color rgba="0.76 0.60 0.42 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.23 0.23 0.115"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="5.510417e-03" ixy="0.0" ixz="0.0" iyy="5.510417e-03" iyz="0.0" izz="8.816667e-03"/>
+    </inertial>
+  </link>
+
   <xacro:omy_f3m_d435 prefix="$(arg prefix)" />
   <xacro:omy_f3m_d435_gazebo prefix="$(arg prefix)" />
   <xacro:rh_p12_rn_a prefix="$(arg prefix)" />
