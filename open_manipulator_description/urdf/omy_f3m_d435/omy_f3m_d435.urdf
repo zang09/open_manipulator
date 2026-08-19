@@ -32,8 +32,11 @@
       </material>
     </visual>
   </link>
-  <!-- Mount box under the base: empty 230 x 230 x 115 mm box, centred on link0,
-       top face at link0's mounting plane (fills z = -0.115 .. 0 in link0). -->
+  <!-- Mount box under the base - empty 230 x 230 x 115 mm box, centred on link0,
+       top face at link0's mounting plane (fills z = -0.115 .. 0 in link0).
+       No colon-followed-by-space in this file; ros2 launch yaml-parses
+       robot_description and one turns the URDF into a mapping key. See the xacro
+       for the whole story. -->
   <joint name="base_box_joint" type="fixed">
     <parent link="link0"/>
     <child link="base_box_link"/>

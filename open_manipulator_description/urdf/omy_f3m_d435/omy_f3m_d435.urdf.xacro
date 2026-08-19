@@ -55,9 +55,20 @@
   <!-- Mount box under the base. The robot stands on an empty 230 x 230 x 115 mm box,
        centred on link0's axis; the box's top face IS link0's mounting plane, so it
        fills z = -0.115 .. 0 in link0 and the surface it stands on is 115 mm below
-       link0. Mass is nominal: the link is fixed to the base and never enters arm
-       dynamics, the inertial is here only so the box is a body rather than a bare
-       frame (box inertia for 1 kg at 0.23 x 0.23 x 0.115). -->
+       link0. Mass is nominal - the link is fixed to the base and never enters arm
+       dynamics, and the inertial is here only so the box is a body rather than a
+       bare frame (box inertia for 1 kg at 0.23 x 0.23 x 0.115).
+
+       NO COLON-SPACE ANYWHERE IN THIS FILE, comments included. ros2 launch infers a
+       parameter's type by running yaml.safe_load over its value, and this whole URDF
+       reaches robot_description as one string. It survives that only by parsing as a
+       plain YAML scalar, which a colon followed by a space ends - YAML then reads it as a mapping key
+       and the
+       launch dies with "Unable to parse the value of parameter robot_description as
+       yaml". Measured 2026-08-18 - one such colon in a comment here was enough. The real
+       fix is ParameterValue(value_type=str) at every robot_description in
+       open_manipulator_bringup and _description launch files, and until those carry
+       it this file has to stay YAML-safe. -->
   <joint name="$(arg prefix)base_box_joint" type="fixed">
     <parent link="$(arg prefix)link0"/>
     <child link="$(arg prefix)base_box_link"/>
