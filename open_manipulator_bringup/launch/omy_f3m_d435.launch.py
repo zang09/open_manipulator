@@ -27,6 +27,7 @@ from launch.substitutions import FindExecutable
 from launch.substitutions import LaunchConfiguration
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -131,11 +132,27 @@ def generate_launch_description():
         init_position_file,
     ])
 
+    # robot_description as a STRING, explicitly.
+    #
+    # Without this ros2 launch infers a parameter's type by running yaml.safe_load over
+    # its value, and the whole URDF arrives here as one string. It survives that only by
+    # happening to parse as a plain YAML scalar -- which any colon followed by a space
+    # ends, because YAML then reads it as a mapping key. Measured 2026-08-18 on this
+    # robot: a single colon inside an XML COMMENT in omy_f3m_d435.urdf.xacro took the
+    # whole bringup down with "Unable to parse the value of parameter robot_description
+    # as yaml", and nothing in the message points at the comment.
+    #
+    # Built once and shared by the three nodes below so xacro runs once, and so there is
+    # one place to look rather than three that can drift.
+    robot_description = {
+        'robot_description': ParameterValue(urdf_file, value_type=str),
+    }
+
     # Define nodes
     control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[{'robot_description': urdf_file}, controller_manager_config],
+        parameters=[robot_description, controller_manager_config],
         output='both',
         condition=UnlessCondition(use_sim),
     )
@@ -149,13 +166,13 @@ def generate_launch_description():
             'joint_state_broadcaster',
         ],
         output='both',
-        parameters=[{'robot_description': urdf_file}],
+        parameters=[robot_description],
     )
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': urdf_file, 'use_sim_time': use_sim}],
+        parameters=[robot_description, {'use_sim_time': use_sim}],
         output='both',
     )
 
